@@ -3,9 +3,13 @@ info:
   title: Crypto Swap API
   version: 1.0.0
   description: V1 MVP Swap Engine API (non-custodial, API-driven)
+
 servers:
+  - url: https://sh-swap-backend.onrender.com
+    description: Production (Render)
+    
   - url: http://localhost:3001
-    description: Local
+    description: Local development
 
 tags:
   - name: Swaps
