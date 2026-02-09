@@ -1,0 +1,111 @@
+paths:
+  /api/v1/swaps:
+    post:
+      tags: [Swaps]
+      summary: Create swap (Step 1: Select)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [from, to]
+              properties:
+                from:
+                  type: object
+                  properties:
+                    symbol: { type: string, example: ETH }
+                    chain: { type: string, example: ethereum }
+                    amount: { type: string, example: "0.5" }
+                to:
+                  type: object
+                  properties:
+                    symbol: { type: string, example: USDT }
+                    chain: { type: string, example: ethereum }
+                    amountEstimated: { type: string, example: "1682.42" }
+      responses:
+        "201":
+          description: Swap created
+
+  /api/v1/swaps/{publicId}/confirm:
+    patch:
+      tags: [Swaps]
+      summary: Confirm recipient address (Step 2: Confirm)
+      parameters:
+        - in: path
+          name: publicId
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [recipientAddress]
+              properties:
+                recipientAddress: { type: string, example: "0xabc123..." }
+      responses:
+        "200":
+          description: Swap confirmed
+
+  /api/v1/swaps/{publicId}/send:
+    patch:
+      tags: [Swaps]
+      summary: Create deposit address (Step 3: Send)
+      parameters:
+        - in: path
+          name: publicId
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Deposit created
+
+  /api/v1/swaps/{publicId}/deposit-detected:
+    patch:
+      tags: [Swaps]
+      summary: Mark deposit detected (internal/testing)
+      parameters:
+        - in: path
+          name: publicId
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [txHash]
+              properties:
+                txHash: { type: string, example: "0xTXHASH_DEMO" }
+      responses:
+        "200":
+          description: Deposit detected
+
+  /api/v1/swaps/{publicId}:
+    get:
+      tags: [Swaps]
+      summary: Get swap details
+      parameters:
+        - in: path
+          name: publicId
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Swap details
+
+  /api/v1/swaps/{publicId}/events:
+    get:
+      tags: [Swaps]
+      summary: Get swap event timeline
+      parameters:
+        - in: path
+          name: publicId
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Swap events
